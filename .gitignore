@@ -12,6 +12,7 @@
 *.zip
 *.tar.gz
 *.rar
+target/
 
 # Intellij files
 *.iml
