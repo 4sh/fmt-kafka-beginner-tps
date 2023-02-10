@@ -15,6 +15,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <kafka.version>3.3.2</kafka.version>
+        <confluent.version>7.3.1</confluent.version>
         <slf4j.version>1.7.36</slf4j.version>
     </properties>
 
@@ -35,7 +36,7 @@
         <dependency>
             <groupId>io.confluent</groupId>
             <artifactId>monitoring-interceptors</artifactId>
-            <version>7.3.1</version>
+            <version>${confluent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
