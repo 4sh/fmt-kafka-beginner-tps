@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class Producer {
+
   static final String DRIVER_FILE_PREFIX = "resources/drivers/";
   static final String KAFKA_TOPIC = "driver-positions";
 
