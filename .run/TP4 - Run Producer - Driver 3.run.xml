@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TP4 - Run Producer - Driver 3" type="Application" factoryName="Application">
+    <envs>
+      <env name="DRIVER_ID" value="driver-3" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="clients.Producer" />
+    <module name="tp4-producer-avro" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="clients.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
