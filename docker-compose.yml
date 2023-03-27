@@ -136,6 +136,39 @@ services:
       CONTROL_CENTER_KSQL_KSQLDB_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_UI_AUTOUPDATE_ENABLE: "false"
 
+  ksql-producer-1:
+    depends_on:
+      - training-kafka
+      - schema-registry
+    image: europe-docker.pkg.dev/quatreapp/k8straining/training-kafka-producer:latest
+    container_name: ksql-producer-1
+    hostname: ksql-producer-1
+    environment:
+      DRIVER_ID: "driver-1"
+      TOPIC: "driver-positions-ksql-avro"
+
+  ksql-producer-2:
+    depends_on:
+      - training-kafka
+      - schema-registry
+    image: europe-docker.pkg.dev/quatreapp/k8straining/training-kafka-producer:latest
+    container_name: ksql-producer-2
+    hostname: ksql-producer-2
+    environment:
+      DRIVER_ID: "driver-2"
+      TOPIC: "driver-positions-ksql-avro"
+
+  ksql-producer-3:
+    depends_on:
+      - training-kafka
+      - schema-registry
+    image: europe-docker.pkg.dev/quatreapp/k8straining/training-kafka-producer:latest
+    container_name: ksql-producer-3
+    hostname: ksql-producer-3
+    environment:
+      DRIVER_ID: "driver-3"
+      TOPIC: "driver-positions-ksql-avro"
+
   create-topics:
     depends_on:
       - training-kafka
