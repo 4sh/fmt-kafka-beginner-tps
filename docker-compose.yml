@@ -1,33 +1,33 @@
 ---
 version: '3.8'
 services:
-  zookeeper:
+  training-zookeeper:
     image: confluentinc/cp-zookeeper:7.3.1
     restart: always
-    container_name: zookeeper
-    hostname: zookeeper
+    container_name: training-zookeeper
+    hostname: training-zookeeper
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  kafka:
+  training-kafka:
     depends_on:
-      - zookeeper
+      - training-zookeeper
     image: confluentinc/cp-enterprise-kafka:7.3.1
     restart: always
-    container_name: kafka
-    hostname: kafka
+    container_name: training-kafka
+    hostname: training-kafka
     ports:
       - "9092:9092"
       - "29092:29092"
       - "9101:9101"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: training-zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://training-kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_METRIC_REPORTERS: "io.confluent.metrics.reporter.ConfluentMetricsReporter"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
@@ -38,7 +38,7 @@ services:
       KAFKA_LOG_RETENTION_BYTES: 536870912
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: localhost
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "kafka:29092"
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "training-kafka:29092"
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
 
   schema-registry:
@@ -50,7 +50,7 @@ services:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'training-kafka:29092'
       KAFKA_REST_CUB_KAFKA_TIMEOUT: 180 # https://github.com/confluentinc/cp-docker-images/issues/807
 
   ksqldb-server:
@@ -63,7 +63,7 @@ services:
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      KSQL_BOOTSTRAP_SERVERS: "kafka:29092"
+      KSQL_BOOTSTRAP_SERVERS: "training-kafka:29092"
       KSQL_HOST_NAME: ksqldb
       KSQL_APPLICATION_ID: "dev-class"
       KSQL_KSQL_CONNECT_URL: http://connect:8083/
@@ -80,7 +80,7 @@ services:
     hostname: ksql-cli
     container_name: ksql-cli
     depends_on:
-      - kafka
+      - training-kafka
       - ksqldb-server
     entrypoint: /bin/sh
     tty: true
@@ -95,7 +95,7 @@ services:
       - "8083:8083"
     environment:
       CONNECT_REST_PORT: 8083
-      CONNECT_BOOTSTRAP_SERVERS: kafka:29092
+      CONNECT_BOOTSTRAP_SERVERS: training-kafka:29092
       CONNECT_GROUP_ID: "connect"
       CONNECT_CONFIG_STORAGE_TOPIC: "connect-config"
       CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
@@ -122,8 +122,8 @@ services:
     ports:
       - "9021:9021"
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka:29092
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: training-kafka:29092
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: training-zookeeper:2181
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_REPLICATION: 1
       CONTROL_CENTER_INTERNAL_TOPICS_REPLICATION: 1
@@ -138,21 +138,21 @@ services:
 
   create-topics:
     depends_on:
-      - kafka
+      - training-kafka
     image: confluentinc/cp-kafka:7.3.1
     container_name: create-topics
     command: >
       bash -c 'echo Waiting for Kafka to be ready... ;
-      cub kafka-ready -b kafka:29092 1 300 ;
+      cub kafka-ready -b training-kafka:29092 1 300 ;
       echo Creating topics... ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-positions --partitions 3 --replication-factor 1 ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-profiles-avro --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-profiles-protobuf --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-profiles-ksql --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-positions-avro --partitions 3 --replication-factor 1 ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-distance-avro --partitions 3 --replication-factor 1 ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-augmented-avro --partitions 3 --replication-factor 1 ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic _confluent-monitoring --partitions 12 --replication-factor 1 --config retention.ms=259200000 --config message.timestamp.type=LogAppendTime ;
-      kafka-topics --bootstrap-server kafka:29092 --create --topic driver-positions-string-avro --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-profiles-avro --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-profiles-protobuf --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-profiles-ksql --partitions 3 --replication-factor 1 --config cleanup.policy=compact ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions-avro --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-distance-avro --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-augmented-avro --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic _confluent-monitoring --partitions 12 --replication-factor 1 --config retention.ms=259200000 --config message.timestamp.type=LogAppendTime ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions-string-avro --partitions 3 --replication-factor 1 ;
       true'
 
