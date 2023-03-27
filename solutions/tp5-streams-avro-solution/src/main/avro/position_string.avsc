@@ -1,9 +1,0 @@
-{"namespace": "clients.avro",
-    "type": "record",
-    "name": "PositionString",
-    "fields": [
-        {"name": "latitude", "type": "double"},
-        {"name": "longitude", "type": "double"},
-        {"name": "positionString", "type": "string"}
-    ]
-}
