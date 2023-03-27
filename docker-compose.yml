@@ -152,6 +152,8 @@ services:
       kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions-avro --partitions 3 --replication-factor 1 ;
       kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-distance-avro --partitions 3 --replication-factor 1 ;
       kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-augmented-avro --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions-ksql-avro --partitions 3 --replication-factor 1 ;
+      kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions-kstreams-avro --partitions 3 --replication-factor 1 ;
       kafka-topics --bootstrap-server training-kafka:29092 --create --topic _confluent-monitoring --partitions 12 --replication-factor 1 --config retention.ms=259200000 --config message.timestamp.type=LogAppendTime ;
       kafka-topics --bootstrap-server training-kafka:29092 --create --topic driver-positions-string-avro --partitions 3 --replication-factor 1 ;
       true'
