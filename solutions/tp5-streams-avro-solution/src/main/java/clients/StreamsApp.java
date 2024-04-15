@@ -79,7 +79,7 @@ public class StreamsApp {
         // Create a KStream from the `driver-positions-avro` topic
         // configure a serdes that can read the string key, and avro value
         final KStream<String, PositionValue> positions = builder.stream(
-            "driver-positions-avro",
+            "driver-positions-kstreams-avro",
             Consumed.with(
                 Serdes.String(),
                 positionValueSerde
