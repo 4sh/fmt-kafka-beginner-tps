@@ -202,6 +202,7 @@ services:
     environment:
       DRIVER_ID: "driver-1"
       TOPIC: "driver-positions-ksql-avro"
+      BOOTSTRAP_SERVERS_CONFIG: "training-kafka-1:29092,training-kafka-2:29092,training-kafka-3:29092"
 
   ksql-producer-2:
     depends_on:
@@ -215,6 +216,7 @@ services:
     environment:
       DRIVER_ID: "driver-2"
       TOPIC: "driver-positions-ksql-avro"
+      BOOTSTRAP_SERVERS_CONFIG: "training-kafka-1:29092,training-kafka-2:29092,training-kafka-3:29092"
 
   ksql-producer-3:
     depends_on:
@@ -228,6 +230,7 @@ services:
     environment:
       DRIVER_ID: "driver-3"
       TOPIC: "driver-positions-ksql-avro"
+      BOOTSTRAP_SERVERS_CONFIG: "training-kafka-1:29092,training-kafka-2:29092,training-kafka-3:29092"
 
   create-topics:
     depends_on:
