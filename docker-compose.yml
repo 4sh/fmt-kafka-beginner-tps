@@ -196,7 +196,9 @@ services:
       - training-kafka-2
       - training-kafka-3
       - schema-registry
-    image: europe-docker.pkg.dev/quatreapp/k8straining/training-kafka-producer:latest
+    build:
+      context: ./labs/generic-avro-producer
+      dockerfile: Dockerfile
     container_name: ksql-producer-1
     hostname: ksql-producer-1
     environment:
@@ -210,7 +212,9 @@ services:
       - training-kafka-2
       - training-kafka-3
       - schema-registry
-    image: europe-docker.pkg.dev/quatreapp/k8straining/training-kafka-producer:latest
+    build:
+      context: ./labs/generic-avro-producer
+      dockerfile: Dockerfile
     container_name: ksql-producer-2
     hostname: ksql-producer-2
     environment:
@@ -224,7 +228,9 @@ services:
       - training-kafka-2
       - training-kafka-3
       - schema-registry
-    image: europe-docker.pkg.dev/quatreapp/k8straining/training-kafka-producer:latest
+    build:
+      context: ./labs/generic-avro-producer
+      dockerfile: Dockerfile
     container_name: ksql-producer-3
     hostname: ksql-producer-3
     environment:
